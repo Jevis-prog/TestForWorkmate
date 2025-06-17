@@ -6,7 +6,7 @@ from core import where_data, aggregate_data
 from utils import read_csv, print_table
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Обработка CSV-файла: фильтрация и агрегация")
     parser.add_argument("--file", required=True, help="Путь к CSV-файлу")
     parser.add_argument("--where", help="Фильтр, формат: column=value или column>value или column<value")
@@ -14,7 +14,7 @@ def parse_args():
     return parser.parse_args()
 
 
-def main():
+def main() -> None:
     args = parse_args()
     data = read_csv(args.file)
 

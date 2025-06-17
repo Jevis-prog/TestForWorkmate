@@ -8,7 +8,7 @@ def read_csv(file_path: str) -> list[dict]:
         return list(reader)
 
 
-def print_table(data: list[dict]):
+def print_table(data: list[dict]) -> None:
     if data:
         print(tabulate(data, headers="keys", tablefmt="grid"))
     else:
