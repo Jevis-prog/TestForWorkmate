@@ -1,3 +1,26 @@
+def try_parse(val: str) -> int | float | str:
+    try:
+        return float(val) if "." in val else int(val)
+    except ValueError:
+        return val
+
+def match(row: dict, operator: str, column: str, target_value: str | float) -> bool:
+    row_value = try_parse(row[column])
+    if isinstance(row_value, (int, float)) and isinstance(target_value, (int, float)):
+        if operator == ">":
+            return row_value > target_value
+        elif operator == "<":
+            return row_value < target_value
+        elif operator == "=":
+            return row_value == target_value
+        else:
+            raise ValueError(f"Неверный оператор сравнения: {operator}")
+    else:
+        if operator == "=":
+            return str(row_value) == str(target_value)
+        else:
+            raise ValueError(f"Нельзя сравнивать строки с операцией '{operator}'")
+
 def where_data(data: list[dict], condition: str) -> list[dict]:
     """
     Фильтрует данные по условию: column=value, column>value, column<value
@@ -17,31 +40,9 @@ def where_data(data: list[dict], condition: str) -> list[dict]:
 
     column = column.strip()
     value = value.strip()
-
-    def try_parse(val: str):
-        try:
-            return float(val) if "." in val else int(val)
-        except ValueError:
-            return val
-
     target_value = try_parse(value)
 
-    def match(row: dict) -> float | int:
-        row_value = try_parse(row[column])
-        if isinstance(row_value, (int, float)) and isinstance(target_value, (int, float)):
-            if operator == ">":
-                return row_value > target_value
-            elif operator == "<":
-                return row_value < target_value
-            elif operator == "=":
-                return row_value == target_value
-        else:
-            if operator == "=":
-                return str(row_value) == str(target_value)
-            else:
-                raise ValueError(f"Нельзя сравнивать строки с операцией '{operator}'")
-
-    return [row for row in data if match(row)]
+    return [row for row in data if match(row, operator, column, target_value)]
 
 def aggregate_data(data: list[dict], aggregation: str) -> list[dict]:
     """
